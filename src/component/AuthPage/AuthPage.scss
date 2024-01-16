@@ -1,0 +1,99 @@
+@import '../../variables.scss';
+
+.login-wrapper{
+
+    height: 100lvh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.login-card{
+
+    background: $card-color;
+    width: 85vw;
+    @media (min-width:900px) {
+        width: 790px;
+    }
+    padding: 20px;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    align-items: center;
+
+
+
+
+    .password-wrapper{
+        position: relative;
+        width: 90%; 
+
+        input {
+            border: 2px solid $gray-color;
+            width: 100%; 
+            height: 45px;
+            border-radius: 10px;
+            padding: 10px;
+            font-weight: 500;
+            font-size: 16px;
+            transition: .2s;
+
+            &:focus {
+                outline:none;
+                box-shadow: 1px 1px 34px 8px rgba($violet-color, 0.2);
+                border-color: $violet-color;
+                
+            }
+        }
+        
+        svg{
+            position: absolute;
+            right: 3%;
+            top: 55%;
+            width: 20px;
+            height: 20px;
+            transform: translate(-50%, -50%);
+        }
+    }
+
+  
+
+    & p {
+        color: $violet-color;   
+    }
+
+    & button {
+        cursor: pointer;
+        width: 90%;
+        height: 35px;
+        border-radius: 10px;
+        background-color: $violet-color;
+        border: none;
+        color: white;
+        font-size: 18px;
+        font-weight: 600;
+        transition: .2s;
+        &:hover {
+            box-shadow: 1px 1px 34px 8px rgba($violet-color, 0.2);
+        }
+    }
+
+    .link-wrapper{
+        margin-top: 20px;
+        width: 90%;
+        display: flex;
+        justify-content: space-between;
+        gap: 30px;
+        transition: .2s;
+
+        & p {
+            color: $violet-background;
+            cursor: pointer;
+            &:hover {
+                color: $violet-color;
+            }
+        }
+    }
+}
+
