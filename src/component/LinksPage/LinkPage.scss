@@ -1,0 +1,149 @@
+@import '../../variables.scss';
+
+.links-page-wrapper{
+    margin-top: 20px;
+    display: flex;
+    justify-content: space-between;
+    @media (max-width:900px) {
+        justify-content: center;
+    }
+    gap: 20px;
+
+
+    .live-preview-wrapper{
+        width: 40vw;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background: $card-color;
+        border-radius: 10px;
+        padding: 60px;
+        position: relative;
+        @media (max-width:900px) {
+            display: none;
+        }
+
+
+
+        img{
+            width: 300px;
+            
+        }
+
+        .live-preview{
+            position: absolute;
+            top: 40%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+    }
+
+    .edit-link-wrapper{
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        width: 55vw; 
+        @media (max-width:900px) {
+            width: 100%;  
+        }
+        background: $card-color;
+        border-radius: 10px;
+        padding: 50px;
+
+
+
+        .edit-link-text{
+
+            & p:first-child{
+                font-size: 1.5rem;
+                font-weight: bold;
+                color: black;
+            }
+            p{
+                color: $gray-color;
+            }
+            
+        }
+
+        .add-link-btn{
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            justify-content: center;
+            padding: 10px 20px;
+            border-radius: 10px;
+            color: $violet-color;
+            border: 2px solid $violet-color;
+            cursor: pointer;
+            transition: .3s;
+
+            &:hover{
+                background: $violet-background;
+            }
+
+            p{
+                font-weight: 700;
+                font-size: 18px;
+            }
+        }
+
+        .links-card-wrapper{
+
+
+            .link-card {
+                background: rgba($gray-color, .3);
+                padding: 10px 20px;
+                border-radius: 10px;
+                display: flex;
+                flex-direction: column;
+                gap: 10px;
+              
+                .link-card-text {
+                  display: flex;
+                  justify-content: space-between;
+                  align-items: center;
+                  margin-bottom: 10px;
+              
+                  .remove-link {
+                    &:hover {
+                      color: $violet-color;
+                      cursor: pointer;
+                    }
+                  }
+              
+                  p {
+                    font-weight: 600;
+                  }
+              
+                  .link-card-number {
+                    display: flex;
+                    align-items: center;
+                    gap: 10px;
+              
+                    svg {
+                      cursor: pointer;
+                    }
+                  }
+                }
+
+                .link-card-input{
+                    position: relative;
+
+                    // {
+                    //     padding-left: 10px;
+                    // }
+
+                    svg{
+                        position: absolute;
+                        top: 55%;
+                        left: 3%;
+                        z-index: 9999;
+                        margin-right: 10px;
+                    }
+                }
+            }
+        }
+
+    }
+
+}

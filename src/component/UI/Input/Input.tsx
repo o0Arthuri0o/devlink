@@ -1,16 +1,22 @@
 import './Input.scss'
 
 type InputProps = {
-  placeholder: string,
+  placeholder?: string,
   value: string,
   setValue: React.Dispatch<React.SetStateAction<string>>,
-  style?: any
+  style?: any,
+  padding?: boolean
 }
 
-const Input = ({placeholder, value, setValue, style}: InputProps) => {
+const Input = ({placeholder, value, setValue, style, padding}: InputProps) => {
+
+  let paddingStyle = {}
+  if(padding) paddingStyle = {paddingLeft: '35px'}
+
   return (
     <div className='input-wrapper' style={style}>
-        <input placeholder={placeholder} type="text" value={value} onChange={(e) => setValue(e.target.value)} />
+        
+        <input style={paddingStyle} placeholder={placeholder} type="text" value={value} onChange={(e) => setValue(e.target.value)} />
     </div>
   )
 }
