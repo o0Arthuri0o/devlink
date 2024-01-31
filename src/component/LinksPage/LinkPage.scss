@@ -12,34 +12,6 @@
     gap: 20px;
 
 
-    .live-preview-wrapper{
-        width: 40vw;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        background: $card-color;
-        border-radius: 10px;
-        padding: 60px;
-        position: relative;
-        @media (max-width:900px) {
-            display: none;
-        }
-
-
-
-        img{
-            width: 300px;
-            
-        }
-
-        .live-preview{
-            position: absolute;
-            top: 40%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-        }
-    }
-
     .edit-link-wrapper{
         display: flex;
         flex-direction: column;

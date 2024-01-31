@@ -8,6 +8,8 @@ import { getLinks, add, removeLink } from '../../store/linkSlice';
 import { RootState } from '../../store/index';
 import Preview from '../UI/Preview/Preview';
 
+
+
 export type LinkCard = {
   user_email: string
   title: string,
@@ -22,7 +24,6 @@ const LinkPage = () => {
   const generateTempleId = () => {
     const date = new Date
     const salt = Math.floor(Math.random() * 100)
-    console.log(date.getSeconds() + `${salt}` + date.getMinutes())
     return date.getSeconds() + `${salt}` + date.getMinutes()
   }
 
@@ -36,7 +37,7 @@ const LinkPage = () => {
     const email = cookies.Email
     const res = await fetch(`${process.env.SERVER_URL}/links/${email}`)
     const data = await res.json()
-    return data
+    dispatch(getLinks(data))
   } 
 
   useEffect(() => {
@@ -45,8 +46,6 @@ const LinkPage = () => {
     }
 
     fetchGetLinks()
-      .then((data) => dispatch(getLinks(data)))
-      .catch((err) => console.error(err))
   }, [])
 
   const links = useSelector((state: RootState) => state.link)
@@ -61,6 +60,7 @@ const LinkPage = () => {
       })
       const data = await res.json()
       if(data !== 'ok') alert('Ошибка сервера')
+      return data
 
 
     } catch(err) {
@@ -68,11 +68,12 @@ const LinkPage = () => {
     }
   }
 
-  const saveLinks = (links: LinkCard[]) => {
-    fetchPostLinks(links)
-    fetchGetLinks()
-      .then((data) => dispatch(getLinks(data)))
-      .catch((err) => console.error(err))
+  const saveLinks = async(links: LinkCard[]) => {
+    const res = await fetchPostLinks(links)
+    if(res === 'ok'){
+          fetchGetLinks()
+    }
+
   } 
 
   const addNewLink = () => {
@@ -113,7 +114,7 @@ const LinkPage = () => {
   return (
     <div className='links-page-wrapper'>
 
-     <Preview/>
+      <Preview/>
 
       <div className='edit-link-wrapper'>
 

@@ -1,4 +1,3 @@
-import React, { useRef, useState } from 'react'
 import './App.scss'
 import { Route, Routes } from 'react-router-dom'
 import AuthPage from './component/AuthPage/AuthPage'
