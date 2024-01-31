@@ -1,11 +1,13 @@
 @import '../../variables.scss';
 
 .links-page-wrapper{
+    max-height: 81vh;
     margin-top: 20px;
     display: flex;
     justify-content: space-between;
     @media (max-width:900px) {
         justify-content: center;
+        max-height: 90vh;    
     }
     gap: 20px;
 
@@ -48,7 +50,7 @@
         }
         background: $card-color;
         border-radius: 10px;
-        padding: 50px;
+        padding: 20px;
 
 
 
@@ -88,59 +90,35 @@
         }
 
         .links-card-wrapper{
+            overflow: auto;
+            scrollbar-width: none;
+            min-height: 358px;
+            max-height: 358px;
+            scroll-snap-type: y mandatory;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            transition:  .3s;
+            &::-webkit-scrollbar {
+                display: none;
+            }
 
+        }
 
-            .link-card {
-                background: rgba($gray-color, .3);
-                padding: 10px 20px;
-                border-radius: 10px;
-                display: flex;
-                flex-direction: column;
-                gap: 10px;
-              
-                .link-card-text {
-                  display: flex;
-                  justify-content: space-between;
-                  align-items: center;
-                  margin-bottom: 10px;
-              
-                  .remove-link {
-                    &:hover {
-                      color: $violet-color;
-                      cursor: pointer;
-                    }
-                  }
-              
-                  p {
-                    font-weight: 600;
-                  }
-              
-                  .link-card-number {
-                    display: flex;
-                    align-items: center;
-                    gap: 10px;
-              
-                    svg {
-                      cursor: pointer;
-                    }
-                  }
-                }
+        .save-btn{
+            cursor: pointer;
+            background: $violet-color;
+            color: white;
+            padding: 10px;
+            border-radius: 5px;
+            text-align: center;
+            font-weight: 700;
+            font-size: 20px;
+            transition: .3s;
 
-                .link-card-input{
-                    position: relative;
-
-                    // {
-                    //     padding-left: 10px;
-                    // }
-
-                    svg{
-                        position: absolute;
-                        top: 55%;
-                        left: 3%;
-                        z-index: 9999;
-                        margin-right: 10px;
-                    }
-                }
+            &:hover{
+                background: $violet-background;
+                color: $violet-color;
             }
         }
 

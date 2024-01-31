@@ -1,7 +1,10 @@
 import { configureStore } from '@reduxjs/toolkit'
+import linkReducer from './linkSlice'
 
 export const store = configureStore({
-  reducer: {},
+  reducer: {
+    link: linkReducer,
+  },
 })
 
 // Infer the `RootState` and `AppDispatch` types from the store itself

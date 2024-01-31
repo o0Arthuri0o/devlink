@@ -1,0 +1,81 @@
+@import '../../../variables.scss';
+
+.link-card {
+    max-height: 358px;
+    scroll-snap-align: start;
+    scroll-snap-stop: always;
+    background: rgba($gray-color, .3);
+    padding: 15px 20px;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  
+    .link-card-text {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+  
+      .remove-link {
+        &:hover {
+          color: $violet-color;
+          cursor: pointer;
+        }
+      }
+  
+      p {
+        font-weight: 600;
+      }
+  
+      .link-card-number {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+  
+        svg {
+          cursor: pointer;
+        }
+      }
+    }
+
+    .link-card-input{
+        position: relative;
+
+        // {
+        //     padding-left: 10px;
+        // }
+
+        svg{
+            position: absolute;
+            top: 55%;
+            left: 3%;
+            z-index: 9999;
+            margin-right: 10px;
+        }
+    }
+
+
+    .link-card-color-picker{
+        display: flex;
+        margin-top: 10px;
+        gap: 10px;
+        align-items: center;
+        justify-content: center;
+        padding: 10px 10px;
+        border-radius: 10px;
+        color: $violet-color;
+        border: 2px solid $violet-color;
+        cursor: pointer;
+        transition: .3s;
+        font-size: 18px;
+        font-weight: 800;
+
+        input[type='color']{
+            height: 0;
+            width: 0;
+            opacity: 0;
+        }
+
+    }
+}
