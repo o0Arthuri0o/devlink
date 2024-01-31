@@ -1,16 +1,35 @@
 import { useEffect, useRef, useState } from 'react'
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
+import './ProfilePage.scss'
+import Preview from '../UI/Preview/Preview'
+import { FaImage } from "react-icons/fa6";
+import Input from '../UI/Input/Input'
+import { useNavigate } from 'react-router-dom'
+import { useSelector } from 'react-redux'
+import { RootState } from '../../store'
 
 function ProfilePage() {
-  // const [selectFile, setSelectFile] = useState()
-  // const [uploaded, setUploaded] = useState()
-  // const filePicker = useRef()
 
-  // const handleChange = (event) => {
-  //   console.log(event.target.files)
-  //   setSelectFile(event.target.files[0])
-  // }
+  const navigate = useNavigate()
+  const links = useSelector((state: RootState) => state.link)
+
+  useEffect(() => {
+    if(!links.length) navigate('/links')
+  }, [])
+
+  const [name, setName] = useState('')
+  const [surname, setSurname] = useState('')
+  const [profileEmail, setProfileEmail] = useState('')
+
+  const [selectFile, setSelectFile] = useState()
+  // const [uploaded, setUploaded] = useState()
+  const filePicker = useRef<HTMLInputElement>(null)
+
+  const handleChange = (event) => {
+    console.log(event.target.files)
+    setSelectFile(event.target.files[0])
+  }
 
   // const handleUpload = async() => {
   //   if (!selectFile) {
@@ -46,28 +65,59 @@ function ProfilePage() {
   //   filePicker.current.click()
   // }
 
-  // const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImdyYWdAbWFpbC5jb20iLCJpYXQiOjE3MDU0MDk2NTUsImV4cCI6MTcwNTQxMzI1NX0.m96qm6V8rZlwg38YAeXj5d7A34JvgSTUZ0UDfK2OMdY'
-  // function parseJwt (token) {
-  //   var base64Url = token.split('.')[1];
-  //   var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-  //   var jsonPayload = decodeURIComponent(window.atob(base64).split('').map(function(c) {
-  //       return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
-  //   }).join(''));
 
-  //   return JSON.parse(jsonPayload);
-  // }
-  // console.log(parseJwt(token).email)
 
   return (
-    <>
+    <div className='edit-page-wrapper' >
+
+      <Preview/>
+
+      <div className='edit-link_profile-wrapper'  >
+
+        <div className='edit-link_profile-text'>
+          <p>Найстройка профиля</p>
+          <p>Добавьте свои данные, чтобы придать индивидуальность вашему профилю</p>
+        </div>
+
+        <div className='upload-wrapper' >
+          <p>Фотография профиля</p>
+
+          <div className='upload' style={{backgroundImage: selectFile ? selectFile : ''}} >
+            <FaImage/>
+            <input 
+              ref={filePicker}
+              className='hidden'
+              type="file" 
+              onChange={(e) => handleChange(e)} 
+              accept='image/*, .png, .jpg, .web, .svg'
+              />
+          </div>
+
+          <p>Доступные форматы: png, jpg, web, svg. Желательно размеры 1024х1024</p>
+
+        </div>
+
+        <div className='info-wrapper'>
+
+          <p>Контактная информация</p>
+         
+          <Input placeholder='Имя' value={name} setValue={setName} />
+          <Input placeholder='Фамилия' value={surname} setValue={setSurname} />
+          <Input placeholder='Почта' value={profileEmail} setValue={setProfileEmail} />
+
+
+        </div>
+
+
+        <hr />
+        <div className='save-btn' >
+          Сохранить
+        </div>
+
+      </div>
+
       {/* <button onClick={handlePick} >Загрузить фото</button>
-      <input 
-        ref={filePicker}
-        className='hidden'
-        type="file" 
-        onChange={(e) => handleChange(e)} 
-        accept='image/*, .png, .jpg, .web, .svg'
-      />
+      
       <button  onClick={handleUpload} >Upload now!</button> */}
 
       {/*uploaded &&
@@ -76,8 +126,7 @@ function ProfilePage() {
           <img src={uploaded} alt='' width="200" />
         </div>
       */}
-      ProfilePage
-    </>
+    </div>
   )
 }
 

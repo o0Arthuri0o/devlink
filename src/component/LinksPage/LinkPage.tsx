@@ -112,13 +112,13 @@ const LinkPage = () => {
 
 
   return (
-    <div className='links-page-wrapper'>
+    <div className='edit-page-wrapper'>
 
       <Preview/>
 
-      <div className='edit-link-wrapper'>
+      <div className='edit-link_profile-wrapper'>
 
-        <div className='edit-link-text'>
+        <div className='edit-link_profile-text'>
           <p>Добавьте ссылки на ваши ресурсы</p>
           <p>Добавляйте/редактируйте/удаляйте ссылки и делитесь со всем миром!</p>
         </div>
