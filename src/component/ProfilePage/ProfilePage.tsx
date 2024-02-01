@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef} from 'react'
 import { Profile } from '../../store/profileSlice';
 import './ProfilePage.scss'
 import Preview from '../UI/Preview/Preview'
@@ -11,9 +11,11 @@ import { useCookies } from 'react-cookie'
 import { update } from '../../store/profileSlice'
 import { useDispatch } from 'react-redux'
 
+
+
 function ProfilePage() {
 
-
+  // const [selectedFile, setSelectedFile] = useState()
 
   const [cookies] = useCookies()
   const navigate = useNavigate()  
@@ -25,7 +27,6 @@ function ProfilePage() {
   const links = useSelector((state: RootState) => state.link)
   const profile = useSelector((state: RootState) => state.profile)
   const dispatch = useDispatch()
-  const [selectedFile, setSelectedFile] = useState()
 
 
   
@@ -34,6 +35,7 @@ function ProfilePage() {
 
   const handleChange = async(event) => {
     const file = event.target.files[0];
+    console.log(file)
     const reader = new FileReader();
 
     reader.onloadend = () => {
@@ -44,7 +46,8 @@ function ProfilePage() {
 
     if (file) {
       reader.readAsDataURL(file);
-      setSelectedFile(file)
+      // setSelectedFile(file)
+      dispatch(update({type: 'file', data: file}))
     }
   }
 
@@ -54,13 +57,19 @@ function ProfilePage() {
 
   const uploadImage = async() => {
 
-    if (!selectedFile) {
+    // if (!selectedFile) {
+    //   alert("please select a file")
+    //   return;
+    // }
+    if (!profile.file) {
       alert("please select a file")
       return;
     }
 
     const formData = new FormData()
-    formData.append('upload', selectedFile)
+    // formData.append('upload', selectedFile)
+    formData.append('upload', profile.file)
+
 
     const email = cookies.Email
 
@@ -76,15 +85,7 @@ function ProfilePage() {
   }
 
 
-  useEffect(() => {
-    const getSrc = async() => {
-      const email = cookies.Email
-      const res = await fetch(`${process.env.SERVER_URL}/images/${email}`)
-  
-      if(res.url) dispatch(update({type: 'imgSrc', data: res.url}))
-    }
-    getSrc()
-  }, [])
+
 
   const updateInputs = (type: keyof Profile) => {
 
@@ -114,7 +115,7 @@ function ProfilePage() {
           <div ref={filePickerContainer} onClick={() => filePicker.current?.click()} className='upload'>
             <FaImage/>
             {profile.imgSrc &&
-              <img src={`${profile.imgSrc}`} alt="Загруженное изображение"/>
+              <img src={`${profile.imgSrc}`}  alt="Загруженное изображение"/>
             }
           
             <input 

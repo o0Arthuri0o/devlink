@@ -17,7 +17,7 @@ export const linkSlice = createSlice({
   name: 'link',
   initialState,
   reducers: {
-    update: (state, action: PayloadAction<LinkCard>) => {
+    updateLink: (state, action: PayloadAction<LinkCard>) => {
         const updatedLink = action.payload;
         state.forEach((link) => {
             if(link.id === updatedLink.id) {
@@ -47,6 +47,6 @@ export const linkSlice = createSlice({
 })
 
 
-export const { update, add, getLinks, removeLink } = linkSlice.actions
+export const { updateLink, add, getLinks, removeLink } = linkSlice.actions
 
 export default linkSlice.reducer

@@ -8,6 +8,7 @@ export type Profile = {
     email: string,
     imgSrc: string | ArrayBuffer,
     timeStamp: string,
+    file: any
 }
 
 
@@ -16,7 +17,8 @@ const initialState: Profile = {
     surname: '',
     email: '',
     imgSrc: '',
-    timeStamp: ''
+    timeStamp: '',
+    file: null
 }
 
 

@@ -6,7 +6,7 @@ import { MdDriveFileRenameOutline } from "react-icons/md";
 import { IoMdColorFill } from "react-icons/io";
 import { useEffect, useRef, useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { update } from '../../../store/linkSlice';
+import { updateLink } from '../../../store/linkSlice';
 
 type LinkCardProps = {
   index: number
@@ -66,7 +66,7 @@ const LinkCard = ({title, user_email ,link, color, text_color, index, id, delete
       text_color: textColor,
       id: id
     }
-    dispatch(update(updatedLink))
+    dispatch(updateLink(updatedLink))
 
   }, [titleState, linkState, btnColor, textColor])
 

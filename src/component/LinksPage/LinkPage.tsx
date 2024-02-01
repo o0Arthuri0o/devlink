@@ -33,19 +33,11 @@ const LinkPage = () => {
   const [cookies] = useCookies()
   // const [links, setLinks] = useState<Link[]>()
 
-  const fetchGetLinks = async() => {
-    const email = cookies.Email
-    const res = await fetch(`${process.env.SERVER_URL}/links/${email}`)
-    const data = await res.json()
-    dispatch(getLinks(data))
-  } 
-
   useEffect(() => {
     if(!cookies.Token) {
       navigate('/')
     }
 
-    fetchGetLinks()
   }, [])
 
   const links = useSelector((state: RootState) => state.link)
@@ -70,8 +62,8 @@ const LinkPage = () => {
 
   const saveLinks = async(links: LinkCard[]) => {
     const res = await fetchPostLinks(links)
-    if(res === 'ok'){
-          fetchGetLinks()
+    if(res !== 'ok'){
+        alert('Сервачок упал, упс!1!')
     }
 
   } 
