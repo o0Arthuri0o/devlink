@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
+import { Profile } from '../../store/profileSlice';
 import './ProfilePage.scss'
 import Preview from '../UI/Preview/Preview'
 import { FaImage } from "react-icons/fa6";
@@ -14,23 +13,21 @@ import { useDispatch } from 'react-redux'
 
 function ProfilePage() {
 
-  const dispatch = useDispatch()
+
 
   const [cookies] = useCookies()
-  const navigate = useNavigate()
-  const links = useSelector((state: RootState) => state.link)
+  const navigate = useNavigate()  
 
   useEffect(() => {
     if(!links.length) navigate('/links')
   }, [])
 
-  const [name, setName] = useState('')
-  const [surname, setSurname] = useState('')
-  const [profileEmail, setProfileEmail] = useState('')
+  const links = useSelector((state: RootState) => state.link)
+  const profile = useSelector((state: RootState) => state.profile)
+  const dispatch = useDispatch()
 
-  const [imgUrl, setImgUrl] = useState<string | ArrayBuffer>('')
-  const [selectedFile, setSelectedFile] = useState()
-  const [uploaded, setUploaded] = useState('')
+
+  
   const filePicker = useRef<HTMLInputElement>(null)
   const filePickerContainer = useRef<HTMLInputElement>(null)
 
@@ -40,32 +37,15 @@ function ProfilePage() {
 
     reader.onloadend = () => {
       if (reader.result){
-        setImgUrl(reader.result);
+        dispatch(update({type: 'imgSrc', data: reader.result}));
       }
     }
 
     if (file) {
       reader.readAsDataURL(file);
-      setSelectedFile(file)
     }
   }
 
-  useEffect(() => {
-
-    if(selectedFile?.lastModified){
-      const newProfileInfo = {
-        email: profileEmail, 
-        name: name,
-        surname: surname,
-        imgSrc: imgUrl,
-        timeStamp: selectedFile?.lastModified
-      }
-
-      dispatch(update(newProfileInfo))
-
-    }
-
-  }, [selectedFile, name, surname, profileEmail])
 
 
  
@@ -101,7 +81,13 @@ function ProfilePage() {
   //   getSrc()
   // }, [])
 
-  
+  const updateInputs = (type: keyof Profile) => {
+
+
+    return (event) => {
+      dispatch(update({type: type, data: event}))
+    }
+  }
 
 
 
@@ -122,8 +108,8 @@ function ProfilePage() {
 
           <div ref={filePickerContainer} onClick={() => filePicker.current?.click()} className='upload'>
             <FaImage/>
-            {imgUrl &&
-              <img src={`${imgUrl}`} alt="Загруженное изображение"/>
+            {profile.imgSrc &&
+              <img src={`${profile.imgSrc}`} alt="Загруженное изображение"/>
             }
           
             <input 
@@ -142,9 +128,9 @@ function ProfilePage() {
 
           <p>Контактная информация</p>
          
-          <Input placeholder='Имя' value={name} setValue={setName} />
-          <Input placeholder='Фамилия' value={surname} setValue={setSurname} />
-          <Input placeholder='Почта' value={profileEmail} setValue={setProfileEmail} />
+          <Input placeholder='Имя' value={profile.name} setValue={updateInputs('name')} />
+          <Input placeholder='Фамилия' value={profile.surname} setValue={updateInputs('surname')} />
+          <Input placeholder='Почта' value={profile.email} setValue={updateInputs('email')} />
 
 
         </div>

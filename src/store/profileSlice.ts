@@ -6,12 +6,12 @@ export type Profile = {
     name: string,
     surname: string,
     email: string,
-    imgSrc: string,
+    imgSrc: string | ArrayBuffer,
     timeStamp: string
 }
 
 
-const initialState = {
+const initialState: Profile = {
     name:'',
     surname: '',
     email: '',
@@ -24,15 +24,21 @@ export const profileSlice = createSlice({
   name: 'profile',
   initialState,
   reducers: {
-    update: (state, action: PayloadAction<Profile>) => {
-        state.email = action.payload.email
-        state.name = action.payload.name
-        state.surname = action.payload.surname
-        state.imgSrc = action.payload.imgSrc
-        state.timeStamp = action.payload.timeStamp
+    update: (state, action: PayloadAction<{ type: keyof Profile; data: Profile[keyof Profile] }>) => {
+      for (let i in state) {
+        if (i === action.payload.type) {
+          if (i === 'imgSrc') {
+            state[i] = action.payload.data as string & ArrayBuffer // явное приведение типа
+          } else {
+            state[i] = action.payload.data as string
+          }
+        }
+      }
     },
   },
 })
+
+
 
 
 export const { update } = profileSlice.actions
