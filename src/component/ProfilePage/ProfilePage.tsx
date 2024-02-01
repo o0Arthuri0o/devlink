@@ -8,9 +8,15 @@ import Input from '../UI/Input/Input'
 import { useNavigate } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import { RootState } from '../../store'
+import { useCookies } from 'react-cookie'
+import { update } from '../../store/profileSlice'
+import { useDispatch } from 'react-redux'
 
 function ProfilePage() {
 
+  const dispatch = useDispatch()
+
+  const [cookies] = useCookies()
   const navigate = useNavigate()
   const links = useSelector((state: RootState) => state.link)
 
@@ -22,16 +28,50 @@ function ProfilePage() {
   const [surname, setSurname] = useState('')
   const [profileEmail, setProfileEmail] = useState('')
 
-  const [selectFile, setSelectFile] = useState()
-  // const [uploaded, setUploaded] = useState()
+  const [imgUrl, setImgUrl] = useState<string | ArrayBuffer>('')
+  const [selectedFile, setSelectedFile] = useState()
+  const [uploaded, setUploaded] = useState('')
   const filePicker = useRef<HTMLInputElement>(null)
+  const filePickerContainer = useRef<HTMLInputElement>(null)
 
-  const handleChange = (event) => {
-    console.log(event.target.files)
-    setSelectFile(event.target.files[0])
+  const handleChange = async(event) => {
+    const file = event.target.files[0];
+    const reader = new FileReader();
+
+    reader.onloadend = () => {
+      if (reader.result){
+        setImgUrl(reader.result);
+      }
+    }
+
+    if (file) {
+      reader.readAsDataURL(file);
+      setSelectedFile(file)
+    }
   }
 
-  // const handleUpload = async() => {
+  useEffect(() => {
+
+    if(selectedFile?.lastModified){
+      const newProfileInfo = {
+        email: profileEmail, 
+        name: name,
+        surname: surname,
+        imgSrc: imgUrl,
+        timeStamp: selectedFile?.lastModified
+      }
+
+      dispatch(update(newProfileInfo))
+
+    }
+
+  }, [selectedFile, name, surname, profileEmail])
+
+
+ 
+
+  // const handleUpload = async(selectFile: any) => {
+
   //   if (!selectFile) {
   //     alert("please select a file")
   //     return;
@@ -39,13 +79,13 @@ function ProfilePage() {
   //   const formData = new FormData()
   //   formData.append('upload', selectFile)
 
-  //   const res = await fetch('http://localhost:8000/images/test@22.com', {
+  //   const res = await fetch( `${process.env.SERVER_URL}/images/${email}`, {
   //     method:"POST",
   //     body: formData
   //   })
 
   //   const data = res.url
-  //   // console.log(data)
+  //   console.log(data)
     
   //   setUploaded(`${data}?random=${Math.random()}`) // добавляем случайную строку к URL-адресу
   //   setSelectFile(null)
@@ -61,9 +101,7 @@ function ProfilePage() {
   //   getSrc()
   // }, [])
 
-  // const handlePick = () => {
-  //   filePicker.current.click()
-  // }
+  
 
 
 
@@ -82,11 +120,14 @@ function ProfilePage() {
         <div className='upload-wrapper' >
           <p>Фотография профиля</p>
 
-          <div className='upload' style={{backgroundImage: selectFile ? selectFile : ''}} >
+          <div ref={filePickerContainer} onClick={() => filePicker.current?.click()} className='upload'>
             <FaImage/>
+            {imgUrl &&
+              <img src={`${imgUrl}`} alt="Загруженное изображение"/>
+            }
+          
             <input 
               ref={filePicker}
-              className='hidden'
               type="file" 
               onChange={(e) => handleChange(e)} 
               accept='image/*, .png, .jpg, .web, .svg'

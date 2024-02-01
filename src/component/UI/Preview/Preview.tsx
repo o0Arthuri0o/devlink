@@ -5,6 +5,7 @@ import { RootState } from '../../../store'
 const Preview = () => {
 
   const links = useSelector((state: RootState) => state.link)
+  const profile = useSelector((state: RootState) => state.profile)
 
   return (
     <div className='live-preview-wrapper'>
@@ -12,10 +13,20 @@ const Preview = () => {
         <img src="../../src/assets/phone2.png" alt="Телефон" />
 
         <div className='live-preview'>
-          
-          <div className='skeleton-avatar'></div>
-          <div className='skeleton-name'></div>
-          <div className='skeleton-email'></div>
+
+          {profile.imgSrc ? 
+            <img src={profile.imgSrc} alt="Аватар" />
+            : <div className='skeleton-avatar'></div>
+          }
+          {profile.name || profile.surname ? 
+            <p>{profile.name +' ' + profile.surname}</p>
+            :<div className='skeleton-name'></div>
+          }
+          {
+            profile.email ? 
+            <p>{profile.email}</p>
+            :<div className='skeleton-email'></div>
+          }
 
           <div className='link-preview-wrapper'>
             {links.map(link => 

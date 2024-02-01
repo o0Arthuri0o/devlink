@@ -35,8 +35,18 @@
         align-items: center;
         border-radius: 20px;
       
-
-
+        
+        img{
+            margin-top: 20px;
+            width: 150px;
+            min-height: 150px;
+            border-radius: 10px;
+        }
+        p{
+            margin-top: 10px;
+            max-width: 260px;
+            word-break: break-all;
+        }
         .skeleton-avatar{
             width: 150px;
             min-height: 150px;

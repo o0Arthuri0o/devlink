@@ -1,9 +1,11 @@
 import { configureStore } from '@reduxjs/toolkit'
 import linkReducer from './linkSlice'
+import profileReducer from './profileSlice'
 
 export const store = configureStore({
   reducer: {
     link: linkReducer,
+    profile: profileReducer
   },
 })
 
