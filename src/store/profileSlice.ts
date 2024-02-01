@@ -7,7 +7,7 @@ export type Profile = {
     surname: string,
     email: string,
     imgSrc: string | ArrayBuffer,
-    timeStamp: string
+    timeStamp: string,
 }
 
 

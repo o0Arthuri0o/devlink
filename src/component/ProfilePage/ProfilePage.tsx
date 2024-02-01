@@ -25,6 +25,7 @@ function ProfilePage() {
   const links = useSelector((state: RootState) => state.link)
   const profile = useSelector((state: RootState) => state.profile)
   const dispatch = useDispatch()
+  const [selectedFile, setSelectedFile] = useState()
 
 
   
@@ -43,6 +44,7 @@ function ProfilePage() {
 
     if (file) {
       reader.readAsDataURL(file);
+      setSelectedFile(file)
     }
   }
 
@@ -50,36 +52,39 @@ function ProfilePage() {
 
  
 
-  // const handleUpload = async(selectFile: any) => {
+  const uploadImage = async() => {
 
-  //   if (!selectFile) {
-  //     alert("please select a file")
-  //     return;
-  //   }
-  //   const formData = new FormData()
-  //   formData.append('upload', selectFile)
+    if (!selectedFile) {
+      alert("please select a file")
+      return;
+    }
 
-  //   const res = await fetch( `${process.env.SERVER_URL}/images/${email}`, {
-  //     method:"POST",
-  //     body: formData
-  //   })
+    const formData = new FormData()
+    formData.append('upload', selectedFile)
 
-  //   const data = res.url
-  //   console.log(data)
+    const email = cookies.Email
+
+    const res = await fetch( `${process.env.SERVER_URL}/images/${email}`, {
+      method:"POST",
+      body: formData
+    })
+
+    const data = res.url
+    console.log(data)
     
-  //   setUploaded(`${data}?random=${Math.random()}`) // добавляем случайную строку к URL-адресу
-  //   setSelectFile(null)
-  // }
+    dispatch(update({type:'imgSrc', data: data}))
+  }
 
 
-  // useEffect(() => {
-  //   const getSrc = async() => {
-  //     const res = await fetch('http://localhost:8000/images/test@22.com')
+  useEffect(() => {
+    const getSrc = async() => {
+      const email = cookies.Email
+      const res = await fetch(`${process.env.SERVER_URL}/images/${email}`)
   
-  //     if(res.url) setUploaded(res.url)
-  //   }
-  //   getSrc()
-  // }, [])
+      if(res.url) dispatch(update({type: 'imgSrc', data: res.url}))
+    }
+    getSrc()
+  }, [])
 
   const updateInputs = (type: keyof Profile) => {
 
@@ -137,7 +142,7 @@ function ProfilePage() {
 
 
         <hr />
-        <div className='save-btn' >
+        <div className='save-btn' onClick={uploadImage} >
           Сохранить
         </div>
 
