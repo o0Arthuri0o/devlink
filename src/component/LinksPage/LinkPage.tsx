@@ -105,8 +105,11 @@ const LinkPage = () => {
 
   return (
     <div className='edit-page-wrapper'>
-
-      <Preview/>
+      
+      <div className='live-preview-wrapper' >
+        <Preview/>
+      </div>
+        
 
       <div className='edit-link_profile-wrapper'>
 

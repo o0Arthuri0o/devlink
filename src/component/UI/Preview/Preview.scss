@@ -1,7 +1,11 @@
 @import '../../../variables.scss';
+@mixin shadow{
+    -webkit-box-shadow: 0px 2px 31px 19px rgba($violet-color, 0.2);
+    -moz-box-shadow: 0px 2px 31px 19px rgba($violet-color, 0.2);
+    box-shadow: 0px 2px 31px 19px rgba($violet-color, 0.2);
+}
 
-
-.live-preview-wrapper{
+.preview-ui-wrapper{
     width: 40vw;
     display: flex;
     justify-content: center;
@@ -10,18 +14,18 @@
     border-radius: 10px;
     padding: 60px;
     position: relative;
+    margin-top: 20px;
     @media (max-width:900px) {
-        display: none;
+        width: 90vw;
     }
-
 
 
     img{
         width: 300px;
-        
     }
 
     .live-preview{
+        width: 300px;
         position: absolute;
         height: 560px;
         overflow: auto;
@@ -45,6 +49,7 @@
             width: 150px;
             min-height: 150px;
             border-radius: 10px;
+            @include shadow
         }
         p{
             margin-top: 10px;
@@ -94,6 +99,16 @@
                 font-size: 18px;
                 overflow: hidden;
                 font-weight: 700;
+                position: relative;
+                transition: .3s;
+                // &:hover{
+                //     @include shadow()
+                // }
+
+                svg{
+                    position: absolute; 
+                    right: 20px; 
+                }
             }
         }
     }

@@ -4,12 +4,15 @@ import { FaLink } from "react-icons/fa";
 import { CgProfile } from "react-icons/cg";
 import { IoLink } from "react-icons/io5";
 import { IoMdEye } from "react-icons/io";
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
 const Header = ({cookie}: {cookie:string}) => {
 
-  const [menuPage, setMenuPage] = useState('links')
+  
+ 
+  const [menuPage, setMenuPage] = useState(`links`)
   const navigate = useNavigate()
+  
 
   const switchPage = (pageName: string) => {
     setMenuPage(pageName)
@@ -39,7 +42,7 @@ const Header = ({cookie}: {cookie:string}) => {
             </div>
           </div>
 
-          <div className='preview-btn'>
+          <div className='preview-btn' onClick={() => switchPage('preview')} >
             <IoMdEye/>
             <p>Превью</p>
           </div>

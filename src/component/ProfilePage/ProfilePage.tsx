@@ -1,4 +1,4 @@
-import { useEffect, useRef} from 'react'
+import { useEffect, useRef, ChangeEvent} from 'react'
 import { Profile } from '../../store/profileSlice';
 import './ProfilePage.scss'
 import Preview from '../UI/Preview/Preview'
@@ -33,8 +33,9 @@ function ProfilePage() {
   const filePicker = useRef<HTMLInputElement>(null)
   const filePickerContainer = useRef<HTMLInputElement>(null)
 
-  const handleChange = async(event) => {
-    const file = event.target.files[0];
+  const handleChange = async(event: ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files ? event.target.files[0] : null;
+    if (!file) return;
     console.log(file)
     const reader = new FileReader();
 
@@ -52,6 +53,14 @@ function ProfilePage() {
   }
 
 
+
+  const updateInputs = (type: keyof Profile) => {
+
+
+    return (event: any) => {
+      dispatch(update({type: type, data: event}))
+    }
+  }
 
  
 
@@ -84,23 +93,45 @@ function ProfilePage() {
     dispatch(update({type:'imgSrc', data: data}))
   }
 
+  const uploadProfileInfo = async() => {
+      const email = cookies.Email
 
-
-
-  const updateInputs = (type: keyof Profile) => {
-
-
-    return (event) => {
-      dispatch(update({type: type, data: event}))
-    }
+      const uploadInfo = {
+        name: profile.name,
+        surname: profile.surname,
+        profileEmail: profile.email
+      }
+          
+      try {
+        const res = await fetch(`${process.env.SERVER_URL}/profile/${email}`, {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json', "Access-Control-Allow-Origin": "*"},
+          body: JSON.stringify(uploadInfo)
+        })
+        const data = await res.json()
+        if(data === 'error') alert('Упс, ошибочка сервера')
+      } catch(err) {
+        console.log(err)
+      }
+      
+      
+      
+          
   }
 
+  const saveAllInfo = () => {
+    uploadImage()
+    uploadProfileInfo()
+  }
 
 
   return (
     <div className='edit-page-wrapper' >
 
-      <Preview/>
+      <div className='live-preview-wrapper'>
+        <Preview/>
+      </div>
+      
 
       <div className='edit-link_profile-wrapper'  >
 
@@ -143,22 +174,12 @@ function ProfilePage() {
 
 
         <hr />
-        <div className='save-btn' onClick={uploadImage} >
+        <div className='save-btn' onClick={saveAllInfo} >
           Сохранить
         </div>
 
       </div>
 
-      {/* <button onClick={handlePick} >Загрузить фото</button>
-      
-      <button  onClick={handleUpload} >Upload now!</button> */}
-
-      {/*uploaded &&
-        <div>
-          <h2>{uploaded.name}</h2> 
-          <img src={uploaded} alt='' width="200" />
-        </div>
-      */}
     </div>
   )
 }

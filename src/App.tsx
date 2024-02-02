@@ -9,6 +9,7 @@ import { useEffect, useState } from 'react'
 import { UseDispatch, useDispatch } from 'react-redux'
 import { update } from './store/profileSlice'
 import { getLinks } from './store/linkSlice'
+import PreviewPage from './component/PreviewPage/PreviewPage'
 
 
 const App = () => {
@@ -43,6 +44,21 @@ const App = () => {
       } 
       fetchGetLinks()
 
+      const getProfileInfo = async() => {
+        const email = cookies.Email
+        const res = await fetch(`${process.env.SERVER_URL}/profile/${email}`)
+        const data = await res.json()
+        if(data !== 'no user') {
+
+          const {name, surname, new_email} = data
+          dispatch(update({type: 'name', data: name}))
+          dispatch(update({type: 'surname', data: surname}))
+          dispatch(update({type: 'email', data: new_email}))
+        }
+
+      }
+      getProfileInfo()
+
   }, [])
 
   const [cookies] = useCookies()
@@ -57,6 +73,7 @@ const App = () => {
             <Route path='/' element={<AuthPage/>}/>
             <Route path='/links' element={<LinkPage/>}/>
             <Route path='/profile' element={<ProfilePage />}/>
+            <Route path='/preview' element={<PreviewPage />}/>
         </Routes>
     </div>
   )
