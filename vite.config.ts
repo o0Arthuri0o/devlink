@@ -2,7 +2,8 @@ import { defineConfig, loadEnv } from 'vite'
 import react from '@vitejs/plugin-react'
 
 const cherryPickedKeys = [
-  "SERVER_URL"
+  "SERVER_URL",
+  "READY_URL"
 ];
 
 // https://vitejs.dev/config/

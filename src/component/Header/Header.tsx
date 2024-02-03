@@ -5,17 +5,20 @@ import { CgProfile } from "react-icons/cg";
 import { IoLink } from "react-icons/io5";
 import { IoMdEye } from "react-icons/io";
 import { useNavigate, useParams } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState } from '../../store';
+import { updatePage } from '../../store/pageSlice';
 
 const Header = ({cookie}: {cookie:string}) => {
 
   
- 
-  const [menuPage, setMenuPage] = useState(`links`)
+  const dispatch = useDispatch()
+  // const [menuPage, setMenuPage] = useState(`links`)
   const navigate = useNavigate()
-  
+  const page = useSelector((state: RootState) => state.page)
 
   const switchPage = (pageName: string) => {
-    setMenuPage(pageName)
+    dispatch(updatePage(pageName))
     navigate(`/${pageName}`)
   }
 
@@ -31,12 +34,12 @@ const Header = ({cookie}: {cookie:string}) => {
           </div>
 
           <div className='menu-wrapper' >
-            <div onClick={() => switchPage('links')}  className={menuPage === 'links' ? 'menu-btn active-menu-btn' : 'menu-btn'}>
+            <div onClick={() => switchPage('links')}  className={page === 'links' ? 'menu-btn active-menu-btn' : 'menu-btn'}>
               <FaLink />
               <p>Ссылки</p>
             </div>
 
-            <div onClick={() => switchPage('profile')} className={menuPage === 'profile' ? 'menu-btn active-menu-btn' : 'menu-btn'}>
+            <div onClick={() => switchPage('profile')} className={page === 'profile' ? 'menu-btn active-menu-btn' : 'menu-btn'}>
               <CgProfile id='profile-icon' />
               <p>Профиль</p>
             </div>

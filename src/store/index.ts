@@ -1,12 +1,13 @@
 import { configureStore } from '@reduxjs/toolkit'
 import linkReducer from './linkSlice'
 import profileReducer from './profileSlice'
-
+import pageReducer from './pageSlice'
 
 export const store = configureStore({
   reducer: {
     link: linkReducer,
-    profile: profileReducer
+    profile: profileReducer,
+    page: pageReducer
   },
   middleware: getDefaultMiddleware =>
   getDefaultMiddleware({

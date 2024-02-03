@@ -10,6 +10,7 @@ import { RootState } from '../../store'
 import { useCookies } from 'react-cookie'
 import { update } from '../../store/profileSlice'
 import { useDispatch } from 'react-redux'
+import { updatePage } from '../../store/pageSlice';
 
 
 
@@ -21,7 +22,10 @@ function ProfilePage() {
   const navigate = useNavigate()  
 
   useEffect(() => {
-    if(!links.length) navigate('/links')
+    if(!links.length) {
+      navigate('/links')
+      dispatch(updatePage('links'))
+    }
   }, [])
 
   const links = useSelector((state: RootState) => state.link)

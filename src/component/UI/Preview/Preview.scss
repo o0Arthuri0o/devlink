@@ -25,20 +25,20 @@
     }
 
     .live-preview{
-        width: 300px;
+        width: 270px;
         position: absolute;
-        height: 560px;
+        height: 562.4px;
         overflow: auto;
         -ms-overflow-style: none;
          scrollbar-width: none;
         overflow: auto;
-        top: 49.9%;
+        top: 49.8%;
         left: 50%;
         transform: translate(-50%, -50%);
         display: flex;
         flex-direction: column;
         align-items: center;
-        border-radius: 20px;
+        border-radius: 35px;
         &::-webkit-scrollbar {
             width: 0;
             height: 0;
@@ -95,7 +95,7 @@
                 display: flex;
                 justify-content: center;
                 align-items: center;
-                border-radius: 10px;
+                border-radius: 20px;
                 font-size: 18px;
                 overflow: hidden;
                 font-weight: 700;
