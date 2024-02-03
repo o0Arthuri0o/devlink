@@ -9,7 +9,8 @@ export const pageSlice = createSlice({
   initialState,
   reducers: {
     updatePage:  (state, action: PayloadAction<string>) => {
-        return state = action.payload
+        state = action.payload
+        return state
     }
   },
 })
