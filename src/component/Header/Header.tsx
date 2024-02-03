@@ -1,10 +1,9 @@
 import './Header.scss'
-import { useState } from 'react'
 import { FaLink } from "react-icons/fa";
 import { CgProfile } from "react-icons/cg";
 import { IoLink } from "react-icons/io5";
 import { IoMdEye } from "react-icons/io";
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../store';
 import { updatePage } from '../../store/pageSlice';

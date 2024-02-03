@@ -1,10 +1,10 @@
-import { useEffect, useId, useRef, useState } from 'react'
+import { useEffect } from 'react'
 import { useCookies } from 'react-cookie'
 import { useNavigate } from 'react-router-dom'
 import './LinkPage.scss'
 import LinkCard from '../UI/LinkCard/LinkCard';
 import { useDispatch, useSelector } from 'react-redux';
-import { getLinks, add, removeLink } from '../../store/linkSlice';
+import {  add, removeLink } from '../../store/linkSlice';
 import { RootState } from '../../store/index';
 import Preview from '../UI/Preview/Preview';
 
@@ -84,10 +84,10 @@ const LinkPage = () => {
   const fetchDeleteLink = async(id: string) => {
     try {
 
-      const res = await fetch(`${process.env.SERVER_URL}/links/${id}`, {
+      fetch(`${process.env.SERVER_URL}/links/${id}`, {
          method: 'DELETE'
       })
-      const data  = await res.json()
+      
 
     } catch(err) {
       console.error(err)

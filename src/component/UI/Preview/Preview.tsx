@@ -8,7 +8,7 @@ const Preview = () => {
   const links = useSelector((state: RootState) => state.link)
   const profile = useSelector((state: RootState) => state.profile)
 
-  
+  const src: any = profile.imgSrc
 
   return (
     <div className='preview-ui-wrapper' >
@@ -18,7 +18,7 @@ const Preview = () => {
       <div className='live-preview'>
 
         {profile.imgSrc ? 
-          <img src={profile.imgSrc} alt="Аватар" />
+          <img src={src} alt="Аватар" />
           : <div className='skeleton-avatar'></div>
         }
         {profile.name || profile.surname ? 
