@@ -13,7 +13,7 @@ const Preview = () => {
   return (
     <div className='preview-ui-wrapper' >
 
-      <img src="../../src/assets/phone2.png" alt="Телефон" />
+      <img src="./phone2.png" alt="Телефон" />
 
       <div className='live-preview'>
 
