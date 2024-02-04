@@ -47,7 +47,7 @@ const LinkPage = () => {
     try {
       const res = await fetch(`${process.env.SERVER_URL}/links`, {
         method: 'POST',
-        headers: {'Content-Type': 'application/json', "Access-Control-Allow-Origin": "*"},
+        // headers: {'Content-Type': 'application/json', "Access-Control-Allow-Origin": "*"},
         body: JSON.stringify(links)
       })
       const data = await res.json()

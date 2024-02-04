@@ -109,7 +109,7 @@ function ProfilePage() {
       try {
         const res = await fetch(`${process.env.SERVER_URL}/profile/${email}`, {
           method: 'POST',
-          headers: {'Content-Type': 'application/json', "Access-Control-Allow-Origin": "*"},
+          // headers: {'Content-Type': 'application/json', "Access-Control-Allow-Origin": "*"},
           body: JSON.stringify(uploadInfo)
         })
         const data = await res.json()
