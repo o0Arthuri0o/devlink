@@ -3,7 +3,9 @@ import react from '@vitejs/plugin-react'
 
 const cherryPickedKeys = [
   "SERVER_URL",
-  "READY_URL"
+  "READY_URL",
+  "SUPABASE_URL",
+  "API_KEY"
 ];
 
 // https://vitejs.dev/config/

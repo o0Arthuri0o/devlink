@@ -11,13 +11,14 @@ import { useCookies } from 'react-cookie'
 import { update } from '../../store/profileSlice'
 import { useDispatch } from 'react-redux'
 import { updatePage } from '../../store/pageSlice';
+import { createClient } from '@supabase/supabase-js';
 
 
 
 function ProfilePage() {
 
   // const [selectedFile, setSelectedFile] = useState()
-
+  const supabase = createClient(`${process.env.SUPABASE_URL}`, `${process.env.API_KEY}`)
   const [cookies] = useCookies()
   const navigate = useNavigate()  
 
@@ -43,6 +44,11 @@ function ProfilePage() {
     console.log(file)
     const reader = new FileReader();
 
+    const token = cookies.Token
+    const myNewFile = new File([file], token , {type: file.type});
+    localStorage.setItem('LastFileType', JSON.stringify(myNewFile.type.split('/')[1]))
+    console.log(myNewFile)
+
     reader.onloadend = () => {
       if (reader.result){
         dispatch(update({type: 'imgSrc', data: reader.result}));
@@ -50,9 +56,9 @@ function ProfilePage() {
     }
 
     if (file) {
-      reader.readAsDataURL(file);
+      reader.readAsDataURL(myNewFile);
       // setSelectedFile(file)
-      dispatch(update({type: 'file', data: file}))
+      dispatch(update({type: 'file', data: myNewFile}))
     }
   }
 
@@ -70,31 +76,18 @@ function ProfilePage() {
 
   const uploadImage = async() => {
 
-    // if (!selectedFile) {
-    //   alert("please select a file")
-    //   return;
-    // }
-    if (!profile.file) {
-      alert("please select a file")
-      return;
+    const token = cookies.Token
+    const fileType = JSON.parse(localStorage.getItem('LastFileType'))
+    if(fileType) {
+
+      const deleteOLD = await supabase.storage.from('avatar').remove([`${token}.${fileType}`])
+      const res = await supabase.storage.from('avatar').upload(`${token}.${fileType}`, profile.file)
+      console.log(res)
+      
+      console.log(`public/avatar/${token}.${fileType}`)
     }
-
-    const formData = new FormData()
-    // formData.append('upload', selectedFile)
-    formData.append('upload', profile.file)
-
-
-    const email = cookies.Email
-
-    const res = await fetch( `${process.env.SERVER_URL}/images/${email}`, {
-      method:"POST",
-      body: formData
-    })
-
-    const data = res.url
-    console.log(data)
     
-    dispatch(update({type:'imgSrc', data: data}))
+    
   }
 
   const uploadProfileInfo = async() => {
@@ -109,7 +102,7 @@ function ProfilePage() {
       try {
         const res = await fetch(`${process.env.SERVER_URL}/profile/${email}`, {
           method: 'POST',
-          // headers: {'Content-Type': 'application/json', "Access-Control-Allow-Origin": "*"},
+          headers: {'Content-Type': 'application/json', "Access-Control-Allow-Origin": "*"},
           body: JSON.stringify(uploadInfo)
         })
         const data = await res.json()

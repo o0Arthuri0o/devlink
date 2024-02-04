@@ -6,28 +6,50 @@ import { useCookies } from 'react-cookie'
 import Header from './component/Header/Header'
 import ProfilePage from './component/ProfilePage/ProfilePage'
 import { useEffect } from 'react'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { update } from './store/profileSlice'
-import { getLinks } from './store/linkSlice'
+import { getLinks} from './store/linkSlice'
 import PreviewPage from './component/PreviewPage/PreviewPage'
-
+import { createClient } from '@supabase/supabase-js'
+import { RootState } from './store'
 
 const App = () => {
 
   const dispatch = useDispatch()
+  
 
+  // Create Supabase client
+  const supabase = createClient(`${process.env.SUPABASE_URL}`, `${process.env.API_KEY}`)
+  console.log(supabase)
+  // Upload file using standard upload
+  // async function uploadFile(file) {
+  //   const { data, error } = await supabase.storage.from('bucket_name').upload('file_path', file)
+  //   if (error) {
+  //     // Handle error
+  //   } else {
+  //     // Handle success
+  //   }
+  // }
   
 
     useEffect(() => {
       console.log('test')
       const getSrc = async() => {
-        const email = cookies.Email
+        const token = cookies.Token
+        const fileType = JSON.parse(localStorage.getItem('LastFileType'))
+        if(!fileType){
+          return
+        }
+
         try {
-          const res = await fetch(`${process.env.SERVER_URL}/images/${email}`)
-          if(res.url) {
-            dispatch(update({type: 'imgSrc', data: res.url}))
-            dispatch(update({type: 'file', data: res.url}))
-          }
+
+          const { data, error } = await supabase
+            .storage
+            .from('public/avatar')
+            .download(`${token}.${fileType}`)
+
+          const imageUrl = URL.createObjectURL(data)  
+          dispatch(update({type: 'imgSrc', data: imageUrl}))
 
         } catch(err) {
             console.log(err)

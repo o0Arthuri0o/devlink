@@ -32,7 +32,7 @@ const AuthPage = () => {
             
             const res = await fetch(`${process.env.SERVER_URL}/${endpoint}`, {
                 method: 'POST',
-                // headers: {'Content-Type': 'application/json', "Access-Control-Allow-Origin": "*"},
+                headers: {'Content-Type': 'application/json', "Access-Control-Allow-Origin": "*"},
                 body: JSON.stringify({email, password})
             })
 
