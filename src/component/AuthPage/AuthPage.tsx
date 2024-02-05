@@ -22,14 +22,13 @@ const AuthPage = () => {
         }
     }, [])
 
-
     const signUpAndLogin = async(email: string, password: string) => {
 
         let endpoint;
         isLogin ? endpoint = 'login' : endpoint = 'signup';
-
+        
         try {
-            
+        
             const res = await fetch(`${process.env.SERVER_URL}/${endpoint}`, {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json', "Access-Control-Allow-Origin": "*"},
@@ -42,7 +41,6 @@ const AuthPage = () => {
         } catch(err) {
             console.log(err)
         }
-        
         
     }
 

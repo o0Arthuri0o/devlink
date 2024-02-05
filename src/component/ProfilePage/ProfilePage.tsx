@@ -11,14 +11,12 @@ import { useCookies } from 'react-cookie'
 import { update } from '../../store/profileSlice'
 import { useDispatch } from 'react-redux'
 import { updatePage } from '../../store/pageSlice';
-import { createClient } from '@supabase/supabase-js';
 
 
 
 function ProfilePage() {
 
-  // const [selectedFile, setSelectedFile] = useState()
-  const supabase = createClient(`${process.env.SUPABASE_URL}`, `${process.env.API_KEY}`)
+
   const [cookies] = useCookies()
   const navigate = useNavigate()  
 
@@ -80,11 +78,28 @@ function ProfilePage() {
     const fileType = JSON.parse(localStorage.getItem('LastFileType'))
     if(fileType) {
 
-      const deleteOLD = await supabase.storage.from('avatar').remove([`${token}.${fileType}`])
-      const res = await supabase.storage.from('avatar').upload(`${token}.${fileType}`, profile.file)
-      console.log(res)
-      
-      console.log(`public/avatar/${token}.${fileType}`)
+      // const res = await supabase.storage.from('avatar').upload(`${token}/${token}.${fileType}`, profile.file, {
+      //   upsert: true
+      // })
+      const res = await fetch(`${process.env.SUPABASE_URL}/storage/v1/object/avatar/${token}/${token}.${fileType}`, {
+        method: 'PUT',
+        body: profile.file,
+        headers: {
+          'Authorization': `Bearer ${process.env.API_KEY}`,
+          'Content-Type': 'image/jpeg'
+        }, 
+      })
+      if(`${res.status}`[0] !== '2'){
+        fetch(`${process.env.SUPABASE_URL}/storage/v1/object/avatar/${token}/${token}.${fileType}`, {
+          method: 'POST',
+          body: profile.file,
+          headers: {
+            'Authorization': `Bearer ${process.env.API_KEY}`,
+            'Content-Type': 'image/jpeg'
+          }, 
+        })
+      }
+
     }
     
     
@@ -150,11 +165,11 @@ function ProfilePage() {
               ref={filePicker}
               type="file" 
               onChange={(e) => handleChange(e)} 
-              accept='image/*, .png, .jpg, .web, .svg'
+              accept='image/*,.jpg'
               />
           </div>
 
-          <p>Доступные форматы: png, jpg, web, svg. Желательно размеры 1024х1024</p>
+          <p>Доступный формат: jpg. Желательные размеры 1024х1024</p>
 
         </div>
 

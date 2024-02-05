@@ -6,30 +6,19 @@ import { useCookies } from 'react-cookie'
 import Header from './component/Header/Header'
 import ProfilePage from './component/ProfilePage/ProfilePage'
 import { useEffect } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch} from 'react-redux'
 import { update } from './store/profileSlice'
 import { getLinks} from './store/linkSlice'
 import PreviewPage from './component/PreviewPage/PreviewPage'
 import { createClient } from '@supabase/supabase-js'
-import { RootState } from './store'
 
 const App = () => {
 
   const dispatch = useDispatch()
-  
 
-  // Create Supabase client
   const supabase = createClient(`${process.env.SUPABASE_URL}`, `${process.env.API_KEY}`)
   console.log(supabase)
-  // Upload file using standard upload
-  // async function uploadFile(file) {
-  //   const { data, error } = await supabase.storage.from('bucket_name').upload('file_path', file)
-  //   if (error) {
-  //     // Handle error
-  //   } else {
-  //     // Handle success
-  //   }
-  // }
+
   
 
     useEffect(() => {
@@ -43,10 +32,10 @@ const App = () => {
 
         try {
 
-          const { data, error } = await supabase
+          const { data} = await supabase
             .storage
             .from('public/avatar')
-            .download(`${token}.${fileType}`)
+            .download(`${token}/${token}.${fileType}`)
 
           const imageUrl = URL.createObjectURL(data)  
           dispatch(update({type: 'imgSrc', data: imageUrl}))
