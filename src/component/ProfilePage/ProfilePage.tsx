@@ -11,7 +11,6 @@ import { update } from '../../store/profileSlice'
 import { useDispatch } from 'react-redux'
 import { updatePage } from '../../store/pageSlice';
 import { useSupabaseClient, useUser } from '@supabase/auth-helpers-react';
-import {v4 as uuidv4} from 'uuid'
 
 export let photoUuid = '';
 
