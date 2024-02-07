@@ -3,12 +3,11 @@ import { useNavigate } from 'react-router-dom'
 import './LinkPage.scss'
 import LinkCard from '../UI/LinkCard/LinkCard';
 import { useDispatch, useSelector } from 'react-redux';
-import {  add, removeLink, getLinks } from '../../store/linkSlice';
+import {  add, removeLink } from '../../store/linkSlice';
 import { RootState } from '../../store/index';
 import Preview from '../UI/Preview/Preview';
 import { useSupabaseClient, useUser } from '@supabase/auth-helpers-react';
 import { LinkCardType } from '../../store/linkSlice';
-import { getProfile, update } from '../../store/profileSlice';
 
 
 

@@ -21,7 +21,7 @@ const AuthPage = () => {
     }, [user])
 
     const signUpAndLogin = async(email: string) => {
-        const {data, error} = await supabase.auth.signInWithOtp({
+        const {error} = await supabase.auth.signInWithOtp({
             email: email
         })
         // console.log('data',data)
