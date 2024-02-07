@@ -7,11 +7,11 @@ import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../store';
 import { updatePage } from '../../store/pageSlice';
-import { useSupabaseClient } from '@supabase/auth-helpers-react';
+// import { useSupabaseClient } from '@supabase/auth-helpers-react';
 
 const Header = ({userId}: {userId:string}) => {
 
-  const supabase = useSupabaseClient()
+  // const supabase = useSupabaseClient()
   const dispatch = useDispatch()
   // const [menuPage, setMenuPage] = useState(`links`)
   const navigate = useNavigate()
@@ -22,14 +22,14 @@ const Header = ({userId}: {userId:string}) => {
     navigate(`/${pageName}`)
   }
 
-  const signOut = async() => {
-    const {error} = await supabase.auth.signOut()
+  // const signOut = async() => {
+  //   const {error} = await supabase.auth.signOut()
 
-    if(error) {
-      alert('Ошибка выхода')
-      console.log(error)
-    }
-  }
+  //   if(error) {
+  //     alert('Ошибка выхода')
+  //     console.log(error)
+  //   }
+  // }
 
 
   return (
@@ -59,9 +59,9 @@ const Header = ({userId}: {userId:string}) => {
             <p>Превью</p>
           </div>
 
-          <div className='preview-btn' onClick={signOut} >
+          {/* <div className='preview-btn' onClick={signOut} >
             <p>Выйти</p>
-          </div>
+          </div> */}
 
     </div>
 
