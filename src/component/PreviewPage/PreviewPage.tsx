@@ -4,19 +4,17 @@ import { useNavigate } from 'react-router-dom'
 import { useEffect, useRef } from 'react'
 import { useSelector } from 'react-redux'
 import { RootState } from '../../store'
-import { useCookies } from 'react-cookie'
+import { useUser } from '@supabase/auth-helpers-react'
 
 
 const PreviewPage = () => {
-  
-  const pushRef = useRef<HTMLDivElement | null>(null)
-  const [cookies] = useCookies()
-  let token = cookies.Token
-  token = token.split('-').join('.')
-  console.log(process.env.READY_URL)
 
-  const copyLinkToReadyPage = (token:string) => {
-    const url = `${process.env.READY_URL}/${token}`
+   const links = useSelector((state: RootState) => state.link)
+  const pushRef = useRef<HTMLDivElement | null>(null)
+  const user = useUser()
+
+  const copyLinkToReadyPage = () => {
+    const url = `${process.env.READY_URL}/${user?.id}`
     if (navigator.clipboard) {
       navigator.clipboard.writeText(url)
         .catch((err) => console.log(err))
@@ -38,14 +36,14 @@ const PreviewPage = () => {
     if(!links.length) navigate('/links')
   }, [])
 
-  const links = useSelector((state: RootState) => state.link)
+ 
   
 
   return (
     <div className='preview-page-wrapper' >
        <div ref={pushRef} className='hidden' >Скопировано</div>
         <Preview />
-        <div onClick={() => copyLinkToReadyPage(token)} className='preview-btn'>Поделиться</div>
+        <div onClick={() => copyLinkToReadyPage()} className='preview-btn'>Поделиться</div>
     </div>
   )
 }

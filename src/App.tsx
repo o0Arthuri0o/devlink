@@ -2,83 +2,63 @@ import './App.scss'
 import { Route, Routes } from 'react-router-dom'
 import AuthPage from './component/AuthPage/AuthPage'
 import LinkPage from './component/LinksPage/LinkPage'
-import { useCookies } from 'react-cookie'
 import Header from './component/Header/Header'
 import ProfilePage from './component/ProfilePage/ProfilePage'
-import { useEffect } from 'react'
-import { useDispatch} from 'react-redux'
-import { update } from './store/profileSlice'
-import { getLinks} from './store/linkSlice'
 import PreviewPage from './component/PreviewPage/PreviewPage'
-import { createClient } from '@supabase/supabase-js'
+import { useSupabaseClient, useUser } from '@supabase/auth-helpers-react'
+import { useEffect } from 'react'
+import { useDispatch } from 'react-redux'
+import { getLinks } from './store/linkSlice'
+import { getProfile, update } from './store/profileSlice'
+
 
 const App = () => {
 
   const dispatch = useDispatch()
+  const user = useUser()
+  const supabase = useSupabaseClient()
 
-  const supabase = createClient(`${process.env.SUPABASE_URL}`, `${process.env.API_KEY}`)
-  console.log(supabase)
-
-  
-
-    useEffect(() => {
-      console.log('test')
-      const getSrc = async() => {
-        const token = cookies.Token
-        const fileType = JSON.parse(localStorage.getItem('LastFileType'))
-        if(!fileType){
-          return
-        }
-
-        try {
-
-          const { data} = await supabase
-            .storage
-            .from('public/avatar')
-            .download(`${token}/${token}.${fileType}`)
-
-          const imageUrl = URL.createObjectURL(data)  
-          dispatch(update({type: 'imgSrc', data: imageUrl}))
-
-        } catch(err) {
-            console.log(err)
-        }
-
+  useEffect(() => {
+    if(user?.id) {
+      const fetchLinks = async() => {
+        const res = await supabase.from('link_card').select("*").eq("user_id", user.id)
+        if(res.error) alert("Ошибка получения ссылок")
+        else if(res.data) dispatch(getLinks(res.data))
       }
-      getSrc()
-
-      const fetchGetLinks = async() => {
-        const email = cookies.Email
-        const res = await fetch(`${process.env.SERVER_URL}/links/${email}`)
-        const data = await res.json()
-        dispatch(getLinks(data))
-      } 
-      fetchGetLinks()
-
-      const getProfileInfo = async() => {
-        const email = cookies.Email
-        const res = await fetch(`${process.env.SERVER_URL}/profile/${email}`)
-        const data = await res.json()
-        if(data !== 'no user') {
-
-          const {name, surname, new_email} = data
-          dispatch(update({type: 'name', data: name}))
-          dispatch(update({type: 'surname', data: surname}))
-          dispatch(update({type: 'email', data: new_email}))
-        }
-
-      }
-      getProfileInfo()
-
-  }, [])
-
-  const [cookies] = useCookies()
+      fetchLinks()
   
+      const fetchProfile = async() => {
+        const res = await supabase.from('profile').select("*").eq("user_id", user.id)
+        if(res.data.length === 0) {
+          const createNewProfile = await supabase.from('profile').insert({user_id: user.id}).select("*").single()
+          dispatch(getProfile(...createNewProfile.data))
+        } else {
+          dispatch(getProfile(...res.data))
+        }
+      }
+      fetchProfile()
+  
+      const fetchPhoto = async() => {
+        const res = await supabase.storage.from('avatar').list(user?.id + '/', {limit: 1})
+        if(res.error) {
+          console.log(res.error)
+          alert('Ошибка загрузки фотографии')
+        } if(res.data.length) {
+          console.log(res)
+          const imgSrc = `https://mtfhvhspnkvkdohoydvq.supabase.co/storage/v1/object/public/avatar/${user.id}/avatar`
+          dispatch(update({type: 'imgSrc', data: imgSrc}))
+        }
+      }
+      fetchPhoto()
+    }
+    console.log('first')
+  }, [user])
+ 
 
   return (
     <div className='app'>
         
-        <Header cookie={cookies.Token} />
+        <Header userId={user?.id} />
 
         <Routes>
             <Route path='/' element={<AuthPage/>}/>

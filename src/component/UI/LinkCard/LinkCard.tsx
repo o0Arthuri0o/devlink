@@ -10,7 +10,7 @@ import { updateLink } from '../../../store/linkSlice';
 
 type LinkCardProps = {
   index: number
-  user_email: string
+  user_id: string
   title: string,
   link: string,
   color: string,
@@ -20,7 +20,7 @@ type LinkCardProps = {
 }
 
 
-const LinkCard = ({title, user_email ,link, color, text_color, index, id, deleteLink}: LinkCardProps) => {
+const LinkCard = ({title, user_id ,link, color, text_color, index, id, deleteLink}: LinkCardProps) => {
 
   const dispatch = useDispatch()
 
@@ -59,7 +59,7 @@ const LinkCard = ({title, user_email ,link, color, text_color, index, id, delete
 
   useEffect(() => {
     const updatedLink = {
-      user_email: user_email,
+      user_id: user_id,
       title: titleState,
       link: linkState,
       color: btnColor,

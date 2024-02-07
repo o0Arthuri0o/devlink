@@ -1,23 +1,31 @@
 import { createSlice } from '@reduxjs/toolkit'
 import type { PayloadAction } from '@reduxjs/toolkit'
+import { stat } from 'fs'
 
 
 export type Profile = {
+    id: string
     name: string,
     surname: string,
     email: string,
     imgSrc: string | ArrayBuffer,
-    timeStamp: string,
     file: any
 }
 
+type ProfileFromDB = {
+  id: string
+  name: string,
+  surname: string,
+  email: string,
+  user_id:string
+}
 
 const initialState: Profile = {
+    id: "",
     name:'',
     surname: '',
     email: '',
     imgSrc: '',
-    timeStamp: '',
     file: null
 }
 
@@ -37,12 +45,18 @@ export const profileSlice = createSlice({
         }
       }
     },
+    getProfile: (state, action: PayloadAction<ProfileFromDB>) => {
+      state.name = action.payload.name
+      state.surname = action.payload.surname
+      state.email = action.payload.email
+      state.id = action.payload.id
+    }
   },
 })
 
 
 
 
-export const { update } = profileSlice.actions
+export const { update, getProfile } = profileSlice.actions
 
 export default profileSlice.reducer

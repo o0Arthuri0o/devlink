@@ -1,105 +1,76 @@
 import { useEffect } from 'react'
-import { useCookies } from 'react-cookie'
 import { useNavigate } from 'react-router-dom'
 import './LinkPage.scss'
 import LinkCard from '../UI/LinkCard/LinkCard';
 import { useDispatch, useSelector } from 'react-redux';
-import {  add, removeLink } from '../../store/linkSlice';
+import {  add, removeLink, getLinks } from '../../store/linkSlice';
 import { RootState } from '../../store/index';
 import Preview from '../UI/Preview/Preview';
+import { useSupabaseClient, useUser } from '@supabase/auth-helpers-react';
+import { LinkCardType } from '../../store/linkSlice';
+import { getProfile, update } from '../../store/profileSlice';
 
 
 
-export type LinkCard = {
-  user_email: string
-  title: string,
-  link: string,
-  color: string,
-  text_color?: string,
-  id: string,
-}
 
 const LinkPage = () => {
 
-  const generateTempleId = () => {
-    const date = new Date
-    const salt = Math.floor(Math.random() * 100)
-    return date.getSeconds() + `${salt}` + date.getMinutes()
-  }
-
+  const user = useUser()
+  const supabase = useSupabaseClient()
   const dispatch = useDispatch()
 
   const navigate = useNavigate()
-  const [cookies] = useCookies()
-  // const [links, setLinks] = useState<Link[]>()
+  const links = useSelector((state: RootState) => state.link)
+
+
 
   useEffect(() => {
-    if(!cookies.Token) {
+    if(!user?.id) {
       navigate('/')
+      return
     }
+
 
   }, [])
 
-  const links = useSelector((state: RootState) => state.link)
   
-  const fetchPostLinks = async(links: LinkCard[]) => {
+ 
 
-    try {
-      const res = await fetch(`${process.env.SERVER_URL}/links`, {
-        method: 'POST',
-        headers: {'Content-Type': 'application/json', "Access-Control-Allow-Origin": "*"},
-        body: JSON.stringify(links)
-      })
-      const data = await res.json()
-      if(data !== 'ok') alert('Ошибка сервера')
-      return data
-
-
-    } catch(err) {
-      console.log(err)
-    }
-  }
-
-  const saveLinks = async(links: LinkCard[]) => {
-    const res = await fetchPostLinks(links)
-    if(res !== 'ok'){
-        alert('Сервачок упал, упс!1!')
+  const saveLinks = async(links: LinkCardType[]) => {
+    for(let link of links) {
+      const res = await supabase
+                        .from('link_card')
+                        .update({title: link.title, link: link.link, color: link.color, text_color: link.text_color})
+                        .eq("id", link.id)
+                        .select("*")
+                        .single()
+      if(res.error) {
+        alert('Ошибка сохранения')
+      }
     }
 
   } 
 
-  const addNewLink = () => {
-    const email = cookies.Email
-    const newLink = {
-      user_email: email,
-      title: '',
-      link: '',
-      color: '',
-      text_color: '',
-      id: `${generateTempleId()+1}`
-    }
-    dispatch(add(newLink))
+  const addNewLink = async() => {
+    const res = await supabase
+      .from('link_card')
+      .insert({user_id: user.id})
+      .select("*")
+      .single()
+    if(res.error) alert('Ошибка записи, попробуйте заново')
+    else if(res.data) dispatch(add(res.data))
   }
 
-  const fetchDeleteLink = async(id: string) => {
-    try {
 
-      fetch(`${process.env.SERVER_URL}/links/${id}`, {
-         method: 'DELETE'
-      })
-      
-
-    } catch(err) {
-      console.error(err)
-    }
-   
-  }
-
-  const deleteLink = (id: string) => {
-    if(id.length > 7) {
-       fetchDeleteLink(id)
-    }
-    dispatch(removeLink(id))
+  const deleteLink = async(id: string) => {
+    const res = await supabase
+      .from('link_card')
+      .delete()
+      .eq("id", id)
+    
+    if(res.error) alert('Ошибка удаления. Попробуйте снова.')
+    else dispatch(removeLink(id))
+    
   }
 
 

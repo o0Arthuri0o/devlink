@@ -1,8 +1,8 @@
 import { createSlice } from '@reduxjs/toolkit'
 import type { PayloadAction } from '@reduxjs/toolkit'
 
-export type LinkCard = {
-    user_email: string
+export type LinkCardType = {
+    user_id: string
     title: string,
     link: string,
     color: string,
@@ -10,14 +10,14 @@ export type LinkCard = {
     id: string,
 }
 
-const initialState: LinkCard[] = []
+const initialState: LinkCardType[] = []
 
 
 export const linkSlice = createSlice({
   name: 'link',
   initialState,
   reducers: {
-    updateLink: (state, action: PayloadAction<LinkCard>) => {
+    updateLink: (state, action: PayloadAction<LinkCardType>) => {
         const updatedLink = action.payload;
         state.forEach((link) => {
             if(link.id === updatedLink.id) {
@@ -28,11 +28,11 @@ export const linkSlice = createSlice({
             }
         })
     },
-    add: (state, action: PayloadAction<LinkCard>) => {
+    add: (state, action: PayloadAction<LinkCardType>) => {
         const newLink = action.payload
         state.push(newLink)
     },
-    getLinks: (state, action: PayloadAction<LinkCard[]>) => {
+    getLinks: (state, action: PayloadAction<LinkCardType[]>) => {
         state.length = 0
         state.push(...action.payload)
     },

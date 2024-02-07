@@ -7,10 +7,11 @@ import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../store';
 import { updatePage } from '../../store/pageSlice';
+import { useSupabaseClient } from '@supabase/auth-helpers-react';
 
-const Header = ({cookie}: {cookie:string}) => {
+const Header = ({userId}: {userId:string}) => {
 
-  
+  const supabase = useSupabaseClient()
   const dispatch = useDispatch()
   // const [menuPage, setMenuPage] = useState(`links`)
   const navigate = useNavigate()
@@ -21,11 +22,20 @@ const Header = ({cookie}: {cookie:string}) => {
     navigate(`/${pageName}`)
   }
 
+  const signOut = async() => {
+    const {error} = await supabase.auth.signOut()
+
+    if(error) {
+      alert('Ошибка выхода')
+      console.log(error)
+    }
+  }
+
 
   return (
 
 
-    <div className='menu-wrapper' style={{display: cookie ? 'flex' : 'none'}} >
+    <div className='menu-wrapper' style={{display: userId   ? 'flex' : 'none'}} >
 
           <div className='devlink-logo-wrapper'>
             <IoLink/>
@@ -47,6 +57,10 @@ const Header = ({cookie}: {cookie:string}) => {
           <div className='preview-btn' onClick={() => switchPage('preview')} >
             <IoMdEye/>
             <p>Превью</p>
+          </div>
+
+          <div className='preview-btn' onClick={signOut} >
+            <p>Выйти</p>
           </div>
 
     </div>

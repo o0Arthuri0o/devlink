@@ -7,17 +7,17 @@ import Input from '../UI/Input/Input'
 import { useNavigate } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import { RootState } from '../../store'
-import { useCookies } from 'react-cookie'
 import { update } from '../../store/profileSlice'
 import { useDispatch } from 'react-redux'
 import { updatePage } from '../../store/pageSlice';
+import { useSupabaseClient, useUser } from '@supabase/auth-helpers-react';
+import {v4 as uuidv4} from 'uuid'
 
-
+export let photoUuid = '';
 
 function ProfilePage() {
 
 
-  const [cookies] = useCookies()
   const navigate = useNavigate()  
 
   useEffect(() => {
@@ -27,6 +27,8 @@ function ProfilePage() {
     }
   }, [])
 
+  const user = useUser()
+  const supabase = useSupabaseClient()
   const links = useSelector((state: RootState) => state.link)
   const profile = useSelector((state: RootState) => state.profile)
   const dispatch = useDispatch()
@@ -40,12 +42,9 @@ function ProfilePage() {
     const file = event.target.files ? event.target.files[0] : null;
     if (!file) return;
     console.log(file)
-    const reader = new FileReader();
 
-    const token = cookies.Token
-    const myNewFile = new File([file], token , {type: file.type});
-    localStorage.setItem('LastFileType', JSON.stringify(myNewFile.type.split('/')[1]))
-    console.log(myNewFile)
+    
+    const reader = new FileReader();
 
     reader.onloadend = () => {
       if (reader.result){
@@ -54,17 +53,14 @@ function ProfilePage() {
     }
 
     if (file) {
-      reader.readAsDataURL(myNewFile);
-      // setSelectedFile(file)
-      dispatch(update({type: 'file', data: myNewFile}))
+      reader.readAsDataURL(file);
+      dispatch(update({type: 'file', data: file}))
     }
   }
 
 
 
   const updateInputs = (type: keyof Profile) => {
-
-
     return (event: any) => {
       dispatch(update({type: type, data: event}))
     }
@@ -73,62 +69,25 @@ function ProfilePage() {
  
 
   const uploadImage = async() => {
-
-    const token = cookies.Token
-    const fileType = JSON.parse(localStorage.getItem('LastFileType'))
-    if(fileType) {
-
-      // const res = await supabase.storage.from('avatar').upload(`${token}/${token}.${fileType}`, profile.file, {
-      //   upsert: true
-      // })
-      const res = await fetch(`${process.env.SUPABASE_URL}/storage/v1/object/avatar/${token}/${token}.${fileType}`, {
-        method: 'PUT',
-        body: profile.file,
-        headers: {
-          'Authorization': `Bearer ${process.env.API_KEY}`,
-          'Content-Type': 'image/jpeg'
-        }, 
-      })
-      if(`${res.status}`[0] !== '2'){
-        fetch(`${process.env.SUPABASE_URL}/storage/v1/object/avatar/${token}/${token}.${fileType}`, {
-          method: 'POST',
-          body: profile.file,
-          headers: {
-            'Authorization': `Bearer ${process.env.API_KEY}`,
-            'Content-Type': 'image/jpeg'
-          }, 
+        // photoUuid = uuidv4()
+        const res = await supabase.storage.from('avatar').upload(user.id + '/avatar', profile.file, {
+          upsert: true,
         })
-      }
-
-    }
-    
-    
+        if(res.error) {
+          console.log(res.error)
+          alert('Ошибка загрузки')
+        }
   }
 
   const uploadProfileInfo = async() => {
-      const email = cookies.Email
 
-      const uploadInfo = {
-        name: profile.name,
-        surname: profile.surname,
-        profileEmail: profile.email
-      }
-          
-      try {
-        const res = await fetch(`${process.env.SERVER_URL}/profile/${email}`, {
-          method: 'POST',
-          headers: {'Content-Type': 'application/json', "Access-Control-Allow-Origin": "*"},
-          body: JSON.stringify(uploadInfo)
-        })
-        const data = await res.json()
-        if(data === 'error') alert('Упс, ошибочка сервера')
-      } catch(err) {
-        console.log(err)
-      }
-      
-      
-      
-          
+      const res = await supabase
+        .from('profile')
+        .update({name: profile.name, surname: profile.surname, email: profile.email})
+        .eq("id", profile.id)
+        .select("*")
+
+      if(res.error) alert('Ошибка сохранения профайла')
   }
 
   const saveAllInfo = () => {
