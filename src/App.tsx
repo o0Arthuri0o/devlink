@@ -47,16 +47,14 @@ const App = () => {
           console.log(res.error)
           alert('Ошибка загрузки фотографии')
         } if(res.data.length > 0) {
-          console.log(res)
-          const lastImgToken = localStorage.getItem('imgToken')
+          const lastImgToken = JSON.parse(localStorage.getItem('imgToken'))
           let imgSrc;
           if(lastImgToken) {
             const dataArray = res.data
             let imgName = '';
-            for (let img of dataArray) {
-              if (img?.name === lastImgToken){
-                imgName = img?.name
-              }
+            for(let img of dataArray) {
+              if(img.name === lastImgToken)
+                imgName = img.name
             }
             imgSrc = `https://mtfhvhspnkvkdohoydvq.supabase.co/storage/v1/object/public/avatar/${user.id}/${imgName}`
 
