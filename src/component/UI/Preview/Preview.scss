@@ -88,24 +88,30 @@
 
             .link-preview{
                 margin-top: 10px;
-                color: black;
                 text-decoration: none;
-                width: 220px;
+                width: 250px;
                 height: 60px;
                 display: flex;
                 justify-content: center;
                 align-items: center;
                 border-radius: 20px;
                 font-size: 18px;
-                overflow: hidden;
-                text-overflow: ellipsis;
-                font-weight: 700;
+                color: black;
                 position: relative;
                 transition: .3s;
-                // &:hover{
-                //     @include shadow()
-                // }
-
+           
+                p {
+                    margin-top: 0;
+                    max-width: 185px;
+                    font-weight: 700;
+                    display: -webkit-box;
+                    -webkit-line-clamp: 2;
+                    /* autoprefixer: off */
+                    -webkit-box-orient: vertical;
+                    /* autoprefixer: on */
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                }
                 svg{
                     position: absolute; 
                     right: 20px; 

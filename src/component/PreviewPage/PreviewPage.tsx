@@ -14,7 +14,8 @@ const PreviewPage = () => {
   const user = useUser()
 
   const copyLinkToReadyPage = () => {
-    const url = `${process.env.READY_URL}/${user?.id}`
+    const imgToken = JSON.parse(localStorage.getItem('imgToken'))
+    const url = `${process.env.READY_URL}/${user?.id}.${imgToken}`
     if (navigator.clipboard) {
       navigator.clipboard.writeText(url)
         .catch((err) => console.log(err))

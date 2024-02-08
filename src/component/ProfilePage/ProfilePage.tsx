@@ -11,6 +11,9 @@ import { update } from '../../store/profileSlice'
 import { useDispatch } from 'react-redux'
 import { updatePage } from '../../store/pageSlice';
 import { useSupabaseClient, useUser } from '@supabase/auth-helpers-react';
+import {v4 as uuidv4} from 'uuid'
+
+
 
 export let photoUuid = '';
 
@@ -41,13 +44,14 @@ function ProfilePage() {
     const file = event.target.files ? event.target.files[0] : null;
     if (!file) return;
     console.log(file)
-
+    let imgToken = uuidv4()
     
     const reader = new FileReader();
 
     reader.onloadend = () => {
       if (reader.result){
         dispatch(update({type: 'imgSrc', data: reader.result}));
+        localStorage.setItem('imgToken', JSON.stringify(imgToken))
       }
     }
 
@@ -68,8 +72,8 @@ function ProfilePage() {
  
 
   const uploadImage = async() => {
-        // photoUuid = uuidv4()
-        const res = await supabase.storage.from('avatar').upload(user.id + '/avatar', profile.file, {
+        const imgToken = JSON.parse(localStorage.getItem('imgToken'))
+        const res = await supabase.storage.from('avatar').upload(user.id + '/' + imgToken, profile.file, {
           upsert: true,
         })
         if(res.error) {
@@ -127,7 +131,7 @@ function ProfilePage() {
               ref={filePicker}
               type="file" 
               onChange={(e) => handleChange(e)} 
-              accept='image/*,.jpg'
+              accept='image/jpeg'
               />
           </div>
 

@@ -40,7 +40,7 @@ const Preview = () => {
                 target="_blank"
                 style={{background:link.color, color: link.text_color, display: link.title ? "flex" : "none"}}
                 className='link-preview'>
-                  {link.title}
+                  <p>{link.title}</p>
                   <FaArrowRightLong/>
               </a>
           )}
