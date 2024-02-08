@@ -79,14 +79,18 @@ function ProfilePage() {
   }
 
   const uploadProfileInfo = async() => {
+      if(profile.name && profile.surname && profile.email) {
+        const res = await supabase
+          .from('profile')
+          .update({name: profile.name, surname: profile.surname, email: profile.email})
+          .eq("id", profile.id)
+          .select("*")
 
-      const res = await supabase
-        .from('profile')
-        .update({name: profile.name, surname: profile.surname, email: profile.email})
-        .eq("id", profile.id)
-        .select("*")
-
-      if(res.error) alert('Ошибка сохранения профайла')
+        if(res.error) alert('Ошибка сохранения профайла')
+      } else {
+        alert('Заполните все поля')
+      }
+      
   }
 
   const saveAllInfo = () => {
