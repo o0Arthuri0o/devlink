@@ -10,6 +10,8 @@ import { useEffect } from 'react'
 import { useDispatch } from 'react-redux'
 import { getLinks } from './store/linkSlice'
 import { getProfile, update } from './store/profileSlice'
+import Loader from './component/UI/Loader/Loader'
+import { updateLoading } from './store/loadingSlice'
 
 
 const App = () => {
@@ -20,6 +22,7 @@ const App = () => {
 
   useEffect(() => {
     if(user?.id) {
+      dispatch(updateLoading(true))
       const fetchLinks = async() => {
         const res = await supabase.from('link_card').select("*").eq("user_id", user.id)
         if(res.error) alert("Ошибка получения ссылок")
@@ -28,12 +31,13 @@ const App = () => {
       fetchLinks()
   
       const fetchProfile = async() => {
-        const res = await supabase.from('profile').select("*").eq("user_id", user.id)
-        if(res.data.length === 0) {
+        const res = await supabase.from('profile').select("*").eq("user_id", user.id).single()
+        console.log(res)
+        if(!res.data) {
           const createNewProfile = await supabase.from('profile').insert({user_id: user.id}).select("*").single()
-          dispatch(getProfile(...createNewProfile.data))
+          dispatch(getProfile(createNewProfile.data))
         } else {
-          dispatch(getProfile(...res.data))
+          dispatch(getProfile(res.data))
         }
       }
       fetchProfile()
@@ -68,6 +72,7 @@ const App = () => {
       }
       fetchPhoto()
     }
+    dispatch(updateLoading(false))
     console.log('first')
   }, [user])
  
@@ -76,7 +81,7 @@ const App = () => {
     <div className='app'>
         
         <Header userId={user?.id} />
-
+        <Loader/>
         <Routes>
             <Route path='/' element={<AuthPage/>}/>
             <Route path='/links' element={<LinkPage/>}/>

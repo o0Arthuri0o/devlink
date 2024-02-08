@@ -12,6 +12,7 @@ import { useDispatch } from 'react-redux'
 import { updatePage } from '../../store/pageSlice';
 import { useSupabaseClient, useUser } from '@supabase/auth-helpers-react';
 import {v4 as uuidv4} from 'uuid'
+import { updateLoading } from '../../store/loadingSlice';
 
 
 
@@ -98,8 +99,13 @@ function ProfilePage() {
   }
 
   const saveAllInfo = () => {
+    dispatch(updateLoading(true))
+
     uploadImage()
     uploadProfileInfo()
+    setTimeout(() => {
+      dispatch(updateLoading(false))
+    }, 3000)
   }
 
 

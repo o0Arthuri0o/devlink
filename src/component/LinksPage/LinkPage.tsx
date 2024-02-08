@@ -8,6 +8,7 @@ import { RootState } from '../../store/index';
 import Preview from '../UI/Preview/Preview';
 import { useSupabaseClient, useUser } from '@supabase/auth-helpers-react';
 import { LinkCardType } from '../../store/linkSlice';
+import { updateLoading } from '../../store/loadingSlice';
 
 
 
@@ -51,25 +52,33 @@ const LinkPage = () => {
   } 
 
   const addNewLink = async() => {
+    dispatch(updateLoading(true))
     const res = await supabase
       .from('link_card')
       .insert({user_id: user.id})
       .select("*")
       .single()
     if(res.error) alert('Ошибка записи, попробуйте заново')
-    else if(res.data) dispatch(add(res.data))
+    else if(res.data) {
+      dispatch(add(res.data))
+      dispatch(updateLoading(false))
+    }
   }
 
 
   const deleteLink = async(id: string) => {
+    dispatch(updateLoading(true))
+
     const res = await supabase
       .from('link_card')
       .delete()
       .eq("id", id)
     
     if(res.error) alert('Ошибка удаления. Попробуйте снова.')
-    else dispatch(removeLink(id))
-    
+    else {
+      dispatch(removeLink(id))
+      dispatch(updateLoading(false))
+    }
   }
 
 
