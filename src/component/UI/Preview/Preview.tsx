@@ -7,8 +7,10 @@ const Preview = () => {
 
   const links = useSelector((state: RootState) => state.link)
   const profile = useSelector((state: RootState) => state.profile)
-
-  const src: any = profile.imgSrc
+  let src;
+  if(profile.imgSrc)  {
+    src = profile.imgSrc
+  }
 
   return (
     <div className='preview-ui-wrapper' >

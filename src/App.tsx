@@ -39,11 +39,14 @@ const App = () => {
       fetchProfile()
   
       const fetchPhoto = async() => {
-        const res = await supabase.storage.from('avatar').list(user?.id + '/', {limit: 1})
+        const res = await supabase.storage.from('avatar').list(user?.id + '/', {
+          limit: 1,
+          offset: 0 
+        })
         if(res.error) {
           console.log(res.error)
           alert('Ошибка загрузки фотографии')
-        } if(res.data.length) {
+        } if(res.data.length > 0) {
           console.log(res)
           const imgSrc = `https://mtfhvhspnkvkdohoydvq.supabase.co/storage/v1/object/public/avatar/${user.id}/avatar`
           dispatch(update({type: 'imgSrc', data: imgSrc}))
