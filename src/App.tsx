@@ -51,8 +51,14 @@ const App = () => {
           const lastImgToken = localStorage.getItem('imgToken')
           let imgSrc;
           if(lastImgToken) {
-            const [imgName] = res.data.filter(img => img.name === lastImgToken)
-            imgSrc = `https://mtfhvhspnkvkdohoydvq.supabase.co/storage/v1/object/public/avatar/${user.id}/${imgName.name}`
+            const dataArray = res.data
+            let imgName = '';
+            for (let img of dataArray) {
+              if (img?.name === lastImgToken){
+                imgName = img?.name
+              }
+            }
+            imgSrc = `https://mtfhvhspnkvkdohoydvq.supabase.co/storage/v1/object/public/avatar/${user.id}/${imgName}`
 
           } else {
             const imgName = res.data[res.data.length - 1].name
