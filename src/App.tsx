@@ -48,9 +48,17 @@ const App = () => {
           alert('Ошибка загрузки фотографии')
         } if(res.data.length > 0) {
           console.log(res)
-          const imgName = res.data[res.data.length - 1].name
-          console.log(imgName)
-          const imgSrc = `https://mtfhvhspnkvkdohoydvq.supabase.co/storage/v1/object/public/avatar/${user.id}/${imgName}`
+          const lastImgToken = localStorage.getItem('imgToken')
+          let imgSrc;
+          if(lastImgToken) {
+            const [imgName] = res.data.filter(img => img.name === lastImgToken)
+            imgSrc = `https://mtfhvhspnkvkdohoydvq.supabase.co/storage/v1/object/public/avatar/${user.id}/${imgName}`
+
+          } else {
+            const imgName = res.data[res.data.length - 1].name
+            imgSrc = `https://mtfhvhspnkvkdohoydvq.supabase.co/storage/v1/object/public/avatar/${user.id}/${imgName}`
+
+          }
           dispatch(update({type: 'imgSrc', data: imgSrc}))
         }
       }
