@@ -52,7 +52,7 @@ const App = () => {
           let imgSrc;
           if(lastImgToken) {
             const [imgName] = res.data.filter(img => img.name === lastImgToken)
-            imgSrc = `https://mtfhvhspnkvkdohoydvq.supabase.co/storage/v1/object/public/avatar/${user.id}/${imgName}`
+            imgSrc = `https://mtfhvhspnkvkdohoydvq.supabase.co/storage/v1/object/public/avatar/${user.id}/${imgName.name}`
 
           } else {
             const imgName = res.data[res.data.length - 1].name
