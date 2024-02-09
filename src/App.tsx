@@ -32,13 +32,13 @@ const App = () => {
   
       const fetchProfile = async() => {
         const res = await supabase.from('profile').select("*").eq("user_id", user.id).single()
-        console.log(res)
-        if(!res.data) {
-          const createNewProfile = await supabase.from('profile').insert({user_id: user.id}).select("*").single()
-          dispatch(getProfile(createNewProfile.data))
+       
+        if(res.error) {
+          console.log(res.error)
         } else {
           dispatch(getProfile(res.data))
         }
+
       }
       fetchProfile()
   

@@ -91,7 +91,14 @@ function ProfilePage() {
           .eq("id", profile.id)
           .select("*")
 
-        if(res.error) alert('Ошибка сохранения профайла')
+        if(res.error) {
+          const createNewProfile = await supabase
+            .from('profile')
+            .insert({user_id: user.id, name: profile.name, surname: profile.surname, email: profile.email})
+            .select("*")
+            .single()
+          if(createNewProfile.error) console.log('Ошибка создания профайла', createNewProfile.error)
+        }
       } else {
         alert('Заполните все поля')
       }
